@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
+//
 // add jwt support
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => {
 
