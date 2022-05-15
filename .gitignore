@@ -74,6 +74,3 @@ _[Ss]cripts
 *.ncrunchsolution
 *.dot[Cc]over
 .DS_Store
-.vscode/
-*.json
-*.csproj
