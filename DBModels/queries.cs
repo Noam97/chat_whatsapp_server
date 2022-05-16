@@ -3,7 +3,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Linq; 
 using Microsoft.EntityFrameworkCore;
-using chatWhatsappServer.Models;
+using chatWhatsappServer.DBModels;
 
 public class PostContact
 {

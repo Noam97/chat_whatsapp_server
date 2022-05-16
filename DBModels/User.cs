@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-namespace chatWhatsappServer.Models
+namespace chatWhatsappServer.DBModels
 {
     public class User
     {

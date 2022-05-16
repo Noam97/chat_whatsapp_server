@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using chatWhatsappServer.Models;
+using chatWhatsappServer.DBModels;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 

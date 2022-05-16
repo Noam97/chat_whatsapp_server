@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.SignalR;
-using chatWhatsappServer.Models;
+using chatWhatsappServer.DBModels;
 namespace chatWhatsappServer.Hubs {
 
     public class LogicHub : Hub {

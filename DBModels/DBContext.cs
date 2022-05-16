@@ -1,7 +1,7 @@
 
 using Microsoft.EntityFrameworkCore;
 
-namespace chatWhatsappServer.Models
+namespace chatWhatsappServer.DBModels
 {
     public class EFContext : DbContext
     {
