@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using System.Linq; 
 using Microsoft.EntityFrameworkCore;
 using chatWhatsappServer.DBModels;
+using chatWhatsappServer.Models;
 
 public class PostContact
 {
@@ -81,6 +82,20 @@ class ContactQueries {
                 db.InboxParticipants.Add(ip);
                 db.SaveChanges();
             }
+        }
+    }
+
+    public void addNewUser(RegisterModel newUser) {
+        using ( var db = new EFContext(conf) )
+        {   
+            if(db.Users.Where(u => u.Id == newUser.UserId).FirstOrDefault() != null) {
+                return;
+            }
+
+            // creates a new user. 
+           User new_user = new User{Id = newUser.UserId, Password = newUser.Password, DisplayName = newUser.DisplayName, ProfileImage = newUser.ProfileImage};
+            db.Users.Add(new_user);
+            db.SaveChanges();
         }
     }
 

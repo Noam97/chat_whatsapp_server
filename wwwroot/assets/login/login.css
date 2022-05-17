@@ -1,0 +1,59 @@
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    /*background-image: url("background.webp");*/
+    max-width: 90%;
+}
+h1{
+    color: darkslategrey;
+    font-size: 40pt;
+    text-align: center;
+    padding-top: 20px;
+}
+div{
+    font-size: 18pt;
+    text-align: center;
+}
+img.logo{
+    border-radius: 4px;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    width: 15%;
+
+}
+
+.container {
+    padding: 16px;
+}
+
+button {
+    background-color: green;
+    color: white;
+    padding: 16px 32px;
+    margin: 4px 2px;
+    border-radius:20%;
+    width: 14%;
+    font-size: 25px;
+}
+
+input[type=text], input[type=password] {
+   alignment: center;
+    width: 25%;
+    padding: 20px;
+    display: block;
+    box-sizing: border-box;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: auto;
+    margin-bottom: 5px;
+}
+
+span.commit_login{
+    font-size: 18px;
+}
+error{
+    font-size: 16px;
+    color: red;
+}

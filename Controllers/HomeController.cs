@@ -1,31 +1,46 @@
-﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using chatWhatsappServer.DBModels;
 using chatWhatsappServer.Models;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
-namespace chatWhatsappServer.Controllers;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+
+
+namespace chatWhatsappServer.Controllers; 
 
 public class HomeController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
+    private IConfiguration conf;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(IConfiguration configuration)
     {
-        _logger = logger;
+        conf = configuration;
     }
-
-    public IActionResult Index()
+    public ActionResult Index()
     {
         return View();
     }
-
-    public IActionResult Privacy()
+ 
+    [HttpPost]
+    public ActionResult Index(HomeModel person)
     {
+        string id = person.UserId;
+        string password = person.Password;
+        using ( var db = new EFContext(conf) )
+        {
+            if(db.Users.Where(x => x.Id == id && x.Password == password).FirstOrDefault() == null) {
+                Console.WriteLine("Logged in");
+                return View();
+            }
+            Console.WriteLine("Not Authorized");
+
+        }
+ 
         return View();
-    }
-
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 }

@@ -1,8 +1,51 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@model chatWhatsappServer.Models.HomeModel
+
+@{
+    Layout = null;
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<html xmlns="http://www.w3.org/1999/html">
+
+<head>
+    <meta name="login">
+    <link href="~/assets/login/login.css" rel=stylesheet>
+    <script src=~/assets/login/login.js></script>
+
+</head>
+
+<body>
+    <h1>WhatsApp Login</h1>
+
+
+    <!--<form method="post">-->
+
+    <div class="img">
+        <img src="~/assets/login/whatsappLogo.jpg" class="logo">
+    </div>
+    @using (Html.BeginForm("Index", "Home", FormMethod.Post)) {
+    <div>
+        <div class="container">
+            <label for="username"><b>Username:</b> </label>
+            <div> <input asp-for="UserId" id="username" type="text" placeholder="Enter User Name" required style="left-padding: 10px">
+            </div>
+
+            <span class="container">
+                <label for="password"><b>Password:</b> <br>
+                    <input asp-for="Password" id="password" type="password" placeholder="Enter Password" required
+                        style="left-padding: 10px"></label>
+            </span>
+        </div>
+        <label class="error" id="login_error"> </label>
+
+        <span class="commit_login" style="background-color:#f1f1f1">
+
+            <span class="register">Not registered? <a href="#" onclick="@("window.location.href='" + @Url.Action("Index", "Register") + "'");"> Click here </a>to register</span>
+        </span>
+        <br> <br>
+        <button onclick="checkUserName()" type="submit"> Login </button>
+    </div>
+    }
+    <!--</form>-->
+</body>
+
+</html>
