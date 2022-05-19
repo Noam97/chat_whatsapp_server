@@ -15,7 +15,7 @@ namespace chatWhatsappServer.DBModels
         [StringLength(50)]
         public string Password {get;set;}
 
-        [StringLength(50)]
+        [StringLength(int.MaxValue)]
         public string? ProfileImage { get;set;}
     }
 }

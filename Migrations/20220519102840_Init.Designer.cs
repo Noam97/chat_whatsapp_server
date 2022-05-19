@@ -11,7 +11,7 @@ using chatWhatsappServer.DBModels;
 namespace chatWhatsappServer.Migrations
 {
     [DbContext(typeof(EFContext))]
-    [Migration("20220508060916_Init")]
+    [Migration("20220519102840_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,7 +21,7 @@ namespace chatWhatsappServer.Migrations
                 .HasAnnotation("ProductVersion", "6.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("chatWhatsappServer.Models.Inbox", b =>
+            modelBuilder.Entity("chatWhatsappServer.DBModels.Inbox", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -56,7 +56,7 @@ namespace chatWhatsappServer.Migrations
                     b.ToTable("Inboxes");
                 });
 
-            modelBuilder.Entity("chatWhatsappServer.Models.InboxParticipants", b =>
+            modelBuilder.Entity("chatWhatsappServer.DBModels.InboxParticipants", b =>
                 {
                     b.Property<int>("IPId")
                         .ValueGeneratedOnAdd()
@@ -78,7 +78,7 @@ namespace chatWhatsappServer.Migrations
                     b.ToTable("InboxParticipants");
                 });
 
-            modelBuilder.Entity("chatWhatsappServer.Models.Messages", b =>
+            modelBuilder.Entity("chatWhatsappServer.DBModels.Messages", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -115,7 +115,7 @@ namespace chatWhatsappServer.Migrations
                     b.ToTable("Messages");
                 });
 
-            modelBuilder.Entity("chatWhatsappServer.Models.User", b =>
+            modelBuilder.Entity("chatWhatsappServer.DBModels.User", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(50)
@@ -131,26 +131,26 @@ namespace chatWhatsappServer.Migrations
                         .HasColumnType("varchar(50)");
 
                     b.Property<string>("ProfileImage")
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
+                        .HasMaxLength(2147483647)
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("chatWhatsappServer.Models.Inbox", b =>
+            modelBuilder.Entity("chatWhatsappServer.DBModels.Inbox", b =>
                 {
-                    b.HasOne("chatWhatsappServer.Models.Messages", "last")
+                    b.HasOne("chatWhatsappServer.DBModels.Messages", "last")
                         .WithMany()
                         .HasForeignKey("lastId");
 
                     b.Navigation("last");
                 });
 
-            modelBuilder.Entity("chatWhatsappServer.Models.InboxParticipants", b =>
+            modelBuilder.Entity("chatWhatsappServer.DBModels.InboxParticipants", b =>
                 {
-                    b.HasOne("chatWhatsappServer.Models.User", "user")
+                    b.HasOne("chatWhatsappServer.DBModels.User", "user")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)

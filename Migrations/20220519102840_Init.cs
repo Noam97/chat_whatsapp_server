@@ -46,7 +46,7 @@ namespace chatWhatsappServer.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Password = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ProfileImage = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
+                    ProfileImage = table.Column<string>(type: "longtext", maxLength: 2147483647, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>

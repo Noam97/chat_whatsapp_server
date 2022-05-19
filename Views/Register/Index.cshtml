@@ -43,9 +43,9 @@
     <label for = "DisplayName"><b>Display name: </b> <input asp-for="DisplayName" id = "DisplayName" type = "text" placeholder="Display name" required></label>
 <div>
     <label> <b>Choose photo: </b> <br>
-        <input type="file" asp-for="ProfileImage" id="ProfileImage" accept="image/*" >
+        <input type="file" id="ProfileImage" accept="image/*" >
+        <input asp-for="ProfileImage" id = "ProfileImageText" type = "text" hidden/>
     </label >
-
 
 </div>
 <br>
