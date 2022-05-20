@@ -29,6 +29,10 @@ namespace chatWhatsappServer.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<string>("image")
+                        .HasMaxLength(2147483647)
+                        .HasColumnType("longtext");
+
                     b.Property<string>("inboxUID")
                         .IsRequired()
                         .HasMaxLength(100)

@@ -20,6 +20,10 @@ namespace chatWhatsappServer.DBModels
 
         public string? server {get;set;}
 
+        [StringLength(int.MaxValue)]
+        public string? image {get;set;}
+
+
 
 
     }

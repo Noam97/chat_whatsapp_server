@@ -1,0 +1,156 @@
+@model chatWhatsappServer.Models.HomeModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8">
+    <title>CHAT</title>
+    <!--    imports-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/assets/chat/chat.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="~/assets/chat/users.js"></script>
+    <script src="~/assets/chat/messages.js"></script>
+    <script src="~/assets/chat/chat.js"></script>
+    <!--    imports-->
+    <script>
+    var currentUserId = '@(ViewBag.currentUser.Id)';
+    </script>
+</head>
+<body>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<div class="container app">
+    <div class="row app-one">
+        <div class="col-sm-4 side">
+            <div class="side-one">
+                <div class="row heading">
+                    <div class="col-sm-3 col-xs-3 heading-avatar">
+                        <div id="myUserName" class="heading-avatar-icon">
+                            <img id="profilePhoto" src=@ViewBag.currentUser.ProfileImage alt="Preview">
+                        </div>
+                    </div>
+                    <div class="col-sm-3 col-xs-3 heading-name">
+                        <a id="profileName" class="heading-name-meta">
+                            @ViewBag.currentUser.DisplayName
+                        </a>
+                    </div>
+                    <div class="col-sm-1 col-xs-1  heading-dot  pull-right">
+                        <i class="fa fa-plus fa-2x  pull-right" aria-hidden="true" data-toggle="modal"
+                           data-target="#createUserModal"></i>
+                    </div>
+                </div>
+
+                <div class="row sideBar">
+                    <div class="row sideBar-body">
+                    
+                    </div>
+                </div>
+            </div>
+
+            <div class="side-two">
+                <div class="row newMessage-heading">
+                    <div class="row newMessage-main">
+                        <div class="col-sm-2 col-xs-2 newMessage-back">
+                            <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                        </div>
+                        <div class="col-sm-10 col-xs-10 newMessage-title">
+                            New Chat
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row composeBox">
+                    <div class="col-sm-12 composeBox-inner">
+                        <div class="form-group has-feedback">
+                            <input id="composeText" type="text" class="form-control" name="searchText"
+                                   placeholder="Search People">
+                            <span class="glyphicon glyphicon-search form-control-feedback"></span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="side_two" class="col-sm-8 conversation" hidden>
+            <div class="row heading">
+                <div class="col-sm-2 col-md-1 col-xs-3 heading-avatar">
+                    <div class="heading-avatar-icon">
+                            <img id="currentChatUserImg" src="~/assets/chat/red-color.png">
+                    </div>
+                </div>
+                <div class="col-sm-8 col-xs-7 heading-name">
+                    <a id="username" class="heading-name-meta">
+                    </a>
+                    <span class="heading-online">Online</span>
+                </div>
+            </div>
+
+            <div class="row message" id="conversation">
+                <div class="row message-previous">
+                    <div class="col-sm-12 previous">
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row reply">
+                <div class="col-sm-1 col-xs-1 reply-emojis">
+                    <label id="label_input" for="fileupload" class="fa-2x">
+                        <i id="upload_icon" class="fa fa-upload"></i>
+                    </label>
+                    <input id="fileupload" type="file"/>
+                </div>
+                <div class="col-sm-1 col-xs-1 reply-recording">
+                    <i id="voice_recorder" class="fa fa-microphone fa-2x" aria-hidden="true" recording="false">
+                    </i>
+                </div>
+                <div class="col-sm-1 col-xs-1 reply-recording">
+                    <i id="video_recorder" class="fa fa-video-camera fa-2x" aria-hidden="true" recording="false">
+                    </i>
+                </div>
+                <div class="col-sm-8 col-xs-8 reply-main">
+                    <textarea class="form-control" rows="1" id="comment"></textarea>
+                </div>
+                <div id="sendButton" class="col-sm-1 col-xs-1 reply-send">
+                    <i class="fa fa-send fa-2x" aria-hidden="true"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+
+<div id="createUserModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header row heading">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Add new contact</h4>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="form-control" id="newUserInput" aria-describedby="emailHelp"
+                       placeholder="Enter user">
+            </div>
+            <div class="modal-footer">
+                <button id="createUserButton" type="button" class="btn btn-default" data-dismiss="modal">Save</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- Modal -->
+
+
+</body>
+</html>

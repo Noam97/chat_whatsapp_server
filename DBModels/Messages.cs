@@ -23,6 +23,6 @@ namespace chatWhatsappServer.DBModels
         [Required(ErrorMessage="Message must have created time")]
         public string created {get;set;}  
 
-        public Boolean sent {get;set;}  
+        public Boolean? sent {get;set;}  
         }
 }

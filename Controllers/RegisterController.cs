@@ -24,7 +24,6 @@ public class RegisterController : Controller
     public ActionResult Index(RegisterModel newUser)
     {
         q.addNewUser(newUser);
- 
-        return View();
+        return RedirectToAction("", "Chat", new UserIdModel{Id = newUser.UserId});
     }
 }

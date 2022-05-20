@@ -11,7 +11,7 @@ using chatWhatsappServer.DBModels;
 namespace chatWhatsappServer.Migrations
 {
     [DbContext(typeof(EFContext))]
-    [Migration("20220519102840_Init")]
+    [Migration("20220519175002_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,6 +29,10 @@ namespace chatWhatsappServer.Migrations
 
                     b.Property<string>("UserId")
                         .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("image")
+                        .HasMaxLength(2147483647)
                         .HasColumnType("longtext");
 
                     b.Property<string>("inboxUID")

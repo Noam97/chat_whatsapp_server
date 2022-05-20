@@ -33,7 +33,7 @@ namespace chatWhatsappServer.Controllers.SharedApi
         [HttpPost]
         public async Task<IActionResult> transfer([FromBody] TransferScheme transfer) {
 
-            Inbox contact = q.getContactByName(transfer.to);
+            Inbox contact = q.getContactByName(transfer.to, "");
 
             if(contact == null) {
                 return BadRequest("Contact does not exists");

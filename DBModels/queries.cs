@@ -11,6 +11,7 @@ public class PostContact
       public string id { get; set; }
       public string? name { get; set; }
       public string? server { get; set; }
+      public string? currentUser { get; set; }
 
 }
 
@@ -18,6 +19,12 @@ public class PostMessage
 {
       public string id { get; set; }
       public string? content { get; set; }
+      public string? inboxUID { get; set; }
+      public string? messageType { get; set; }
+      public string? created { get; set; }
+      public bool? sent { get; set; }
+
+
 }
 
 class ContactQueries {
@@ -34,6 +41,7 @@ class ContactQueries {
         if (inboxParticipant == null) {
             return new List<Inbox>();
         }
+
         return (from users in db.Users
                 join inboxpar in db.InboxParticipants on users.Id equals inboxpar.UserId
                 join inbox in db.Inboxes on inboxpar.inboxUID equals inbox.inboxUID
@@ -45,25 +53,37 @@ class ContactQueries {
                                 server = Environment.MachineName,
                                 inboxUID = inbox.inboxUID,
                                 last = inbox.last,
-                                lastdate = inbox.lastdate
+                                lastdate = inbox.lastdate,
+                                image = db.Users.Where(u => u.Id == inbox.UserId).First().ProfileImage
                             }).ToList();
         }
 
     }
 
-    public Inbox getContactByName(string userId) {
+    public Inbox getContactByName(string userId, string inboxUID) {
          using ( var db = new EFContext(conf) )
         {   
-            var contact = db.Inboxes.Where(u => u.UserId == userId).FirstOrDefault();
+            if (inboxUID == "") {
+            return db.Inboxes.Where(u => u.UserId == userId).FirstOrDefault();
+            }
+            return db.Inboxes.Where(u => u.UserId == userId && u.inboxUID == inboxUID).FirstOrDefault();
+        }
+    }
+
+    public User getUser(string userId) {
+         using ( var db = new EFContext(conf) )
+        {   
+            var contact = db.Users.Where(u => u.Id == userId).FirstOrDefault();
             return contact;     
         }
     }
 
-
     public void addNewContact(PostContact newContact, string currentUserId) {
         using ( var db = new EFContext(conf) )
         {   
-            if(db.Inboxes.Where(u => u.UserId == newContact.id).FirstOrDefault() != null) {
+            var inbox = db.InboxParticipants.Where(u => u.UserId == currentUserId).FirstOrDefault();
+
+            if(inbox != null && db.Inboxes.Where(i => i.inboxUID == inbox.inboxUID && i.UserId == newContact.id).FirstOrDefault() != null) {
                 return;
             }
             
@@ -164,7 +184,7 @@ class ContactQueries {
 
         string inboxUID = inboxParticipant.inboxUID;
 
-        Inbox contact = getContactByName(inputUserId);
+        Inbox contact = getContactByName(inputUserId, inboxUID);
 
         Messages msg = new Messages{inboxUID = inboxUID, UserId = inputUserId, messageType = messageType, content = message, created = DateTime.UtcNow.ToString(), sent = false};
         db.Messages.Add(msg);
