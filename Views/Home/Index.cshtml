@@ -9,8 +9,7 @@
 <head>
     <meta name="login">
     <link href="~/assets/login/login.css" rel=stylesheet>
-    <script src=~/assets/login/login.js></script>
-
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 
 <body>
@@ -45,6 +44,16 @@
         <button onclick="checkUserName()" type="submit"> Login </button>
     </div>
     }
+    <script>
+    $(document).ready(function () {
+
+    var isError = '@(ViewBag.error)';
+    if (isError) {
+        document.getElementById("login_error").insertAdjacentHTML("afterend", "<h5 style='color: red'> username or password is incorrect</h5>");
+
+    }
+    });
+    </script>
     <!--</form>-->
 </body>
 

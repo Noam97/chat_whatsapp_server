@@ -26,6 +26,8 @@ public class HomeController : Controller
         {
             if(db.Users.Where(x => x.Id == id && x.Password == password).FirstOrDefault() == null) {
                 Console.WriteLine("not authorized");
+                Response.StatusCode = 403;
+                ViewBag.error = true;
                 return View();
             }
             return RedirectToAction("", "Chat", new UserIdModel{Id = id});
