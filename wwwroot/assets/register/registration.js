@@ -70,7 +70,7 @@ function register () {
 
 //Password less than 8 characters
 
-    if(password!="" && password.length <8) {
+    if(password != "" && password.length <8) {
         canRegister = false;
         if (!passwordLength) {
             document.getElementById("passwordLength").style.display = "block"

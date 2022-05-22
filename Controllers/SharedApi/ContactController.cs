@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using chatWhatsappServer.Models;
 using chatWhatsappServer.DBModels;
 using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
@@ -24,15 +25,28 @@ namespace chatWhatsappServer.Controllers.SharedApi
 
         [HttpGet]
         public ContentResult GetContacts() {
+                List<LightContactModel> c = new List<LightContactModel>();
                 string currentUserId = utils.ExtractUserIdFromJwt(HttpContext);
                 List<Inbox> ContactList = q.getContactList(currentUserId);
-                return Content(JsonSerializer.Serialize(ContactList), "application/json");
+
+                foreach(var contact in ContactList) {
+                    c.Add(new LightContactModel {
+                        id = contact.UserId,
+                        name = contact.name,
+                        server = contact.server,
+                        last = contact.last != null ? contact.last.content : "",
+                        lastdate = contact.lastdate != null ? contact.lastdate : ""
+                    });
+                }
+
+                return Content(JsonSerializer.Serialize(c), "application/json");
         }
 
         [Produces("application/json")]
         [HttpPost]
         public ActionResult createContact([FromBody] PostContact newContact) {
             string currentUserId = utils.ExtractUserIdFromJwt(HttpContext);
+            q.addNewUser(new RegisterModel{UserId = newContact.id, DisplayName = newContact.id, Password = "", ProfileImage = ""});
             q.addNewContact(newContact, currentUserId);
             return Ok();
 

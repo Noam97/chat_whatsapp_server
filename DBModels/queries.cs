@@ -22,6 +22,7 @@ public class PostMessage
       public string? inboxUID { get; set; }
       public string? messageType { get; set; }
       public string? created { get; set; }
+      public string? currentUserId { get; set; }
       public bool? sent { get; set; }
 
 
@@ -63,8 +64,17 @@ class ContactQueries {
     public Inbox getContactByName(string userId, string inboxUID) {
          using ( var db = new EFContext(conf) )
         {   
+            string id = "";
+
             if (inboxUID == "") {
-            return db.Inboxes.Where(u => u.UserId == userId).FirstOrDefault();
+                var obj = db.InboxParticipants.Where(u => u.UserId == userId);
+                if (obj == null) {
+                    return null;
+                }
+
+                id = obj.FirstOrDefault().inboxUID;
+                return db.Inboxes.Where(u => u.UserId == userId && u.inboxUID == id).FirstOrDefault();
+
             }
             return db.Inboxes.Where(u => u.UserId == userId && u.inboxUID == inboxUID).FirstOrDefault();
         }
@@ -156,6 +166,21 @@ class ContactQueries {
         return true;
     }
 
+    public List<Messages> getChat(string currentUserId, string inputUserId) {
+        using ( var db = new EFContext(conf) ) {
+
+        InboxParticipants inboxParticipantOne = db.InboxParticipants.Where(user => user.UserId == currentUserId).FirstOrDefault();
+        
+        InboxParticipants inboxParticipantTwo = db.InboxParticipants.Where(user => user.UserId == inputUserId).FirstOrDefault();
+
+        if (inboxParticipantOne == null && inboxParticipantTwo == null) {
+            return new List<Messages>();
+        }
+        return db.Messages.Where(m => (m.inboxUID == inboxParticipantOne.inboxUID && m.UserId == inputUserId) || 
+        (m.inboxUID == inboxParticipantTwo.inboxUID && m.UserId == currentUserId)).ToList();
+        }
+
+    }
 
     public List<Messages> getMessagesOf(string currentUserId, string inputUserId, int messageId = -1) {
         using ( var db = new EFContext(conf) ) {
@@ -175,25 +200,34 @@ class ContactQueries {
 
     public bool createNewMessage(string currentUserId, string inputUserId, string messageType, string message) {
 
-        using ( var db = new EFContext(conf) ) {
+ using ( var db = new EFContext(conf) ) {
 
-        InboxParticipants inboxParticipant = db.InboxParticipants.Where(user => user.UserId == currentUserId).FirstOrDefault();
+        InboxParticipants inboxParticipantFirst = db.InboxParticipants.Where(user => user.UserId == currentUserId).FirstOrDefault();
+        
+        InboxParticipants inboxParticipantSecond = db.InboxParticipants.Where(user => user.UserId == inputUserId).FirstOrDefault();
 
-        if(inboxParticipant == null)
+        if(inboxParticipantFirst == null || inboxParticipantSecond == null)
             return false;
 
-        string inboxUID = inboxParticipant.inboxUID;
+        string inboxUIDFirst = inboxParticipantFirst.inboxUID;
+        string inboxUIDSecond = inboxParticipantSecond.inboxUID;
 
-        Inbox contact = getContactByName(inputUserId, inboxUID);
+        Inbox firstContact = getContactByName(inputUserId, inboxUIDFirst);
+        Inbox secondContact = getContactByName(inputUserId, inboxUIDSecond);
 
-        Messages msg = new Messages{inboxUID = inboxUID, UserId = inputUserId, messageType = messageType, content = message, created = DateTime.UtcNow.ToString(), sent = false};
+        Messages msg = new Messages{inboxUID = firstContact.inboxUID, UserId = inputUserId, messageType = messageType, content = message, created = DateTime.UtcNow.ToString(), sent = false};
         db.Messages.Add(msg);
         db.SaveChanges();
 
 
-        PostContact pc = new PostContact{id = contact.UserId, name = contact.name, server = contact.server};
+        PostContact pc1 = new PostContact{id = firstContact.UserId, name = firstContact.name, server = firstContact.server};
 
-        updateContact(contact, pc, msg);
+        PostContact pc2 = new PostContact{id = secondContact.UserId, name = secondContact.name, server = secondContact.server};
+
+
+        updateContact(firstContact, pc1, msg);
+
+        updateContact(secondContact, pc2, msg);
         
         return true;
     }

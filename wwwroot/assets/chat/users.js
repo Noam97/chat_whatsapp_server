@@ -25,7 +25,7 @@ async function renderUsers() {
             const contact = listOfUsers[key];
             if (contact["last"] !== null) {
                 lastMessage = contact["last"]["content"];
-                fullDate = new Date(contact["lastdate"]);
+                fullDate = new Date(contact["last"]["created"]);
                 hour = fullDate.toLocaleTimeString(navigator.language,
                     {hour: '2-digit', minute: '2-digit'});
                 date = fullDate.toLocaleDateString();

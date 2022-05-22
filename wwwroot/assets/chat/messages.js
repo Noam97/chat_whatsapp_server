@@ -92,7 +92,7 @@ async function renderMessages(user, image, currentUser, inboxId) {
     for (const i in messagesFromDb) {
         const msg = messagesFromDb[i];
         let direction = "receiver";
-        if (msg["sent"]) {
+        if (currentUser !== msg["UserId"]) {
             direction = "sender";
         }
 
@@ -114,7 +114,7 @@ async function renderMessages(user, image, currentUser, inboxId) {
     $("#username").empty().append(username);
 }
 
-function postMessage(username, inboxId, content, created) {
+function postMessage(username, inboxId, content, created, currentUserId) {
     return $.ajax('/Chat/CreateNewMessage', {
         data : JSON.stringify({ 
             id: username,
@@ -122,7 +122,9 @@ function postMessage(username, inboxId, content, created) {
             inboxUID: inboxId,
             messageType: "text",
             created: created.toString(),
-            sent: true}),
+            sent: true,
+            currentUserId: currentUserId
+        }),
         contentType : 'application/json',
         type : 'POST',    
     }, // data to be submit
@@ -132,13 +134,16 @@ function postMessage(username, inboxId, content, created) {
     }
 
 async function addNewMessage(user, currentUserId, inboxId, content) {
-    await postMessage(user, inboxId, content, +new Date())
+    await postMessage(user, inboxId, content, +new Date(), currentUserId)
     renderMessages(user, "", currentUserId, inboxId);
     let side_two = document.getElementById("side_two");
     side_two.scrollTop = side_two.scrollHeight;
 
     let conversation = document.getElementById("conversation");
     conversation.scrollTop = conversation.scrollHeight;
+    setTimeout(async function(){    
+        await renderUsers();    
+    },500);
 }
 
 

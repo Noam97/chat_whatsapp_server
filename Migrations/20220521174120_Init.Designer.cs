@@ -11,7 +11,7 @@ using chatWhatsappServer.DBModels;
 namespace chatWhatsappServer.Migrations
 {
     [DbContext(typeof(EFContext))]
-    [Migration("20220519175002_Init")]
+    [Migration("20220521174120_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -111,7 +111,10 @@ namespace chatWhatsappServer.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
-                    b.Property<bool>("sent")
+                    b.Property<string>("sender")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool?>("sent")
                         .HasColumnType("tinyint(1)");
 
                     b.HasKey("Id");

@@ -109,7 +109,10 @@ namespace chatWhatsappServer.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
-                    b.Property<bool>("sent")
+                    b.Property<string>("sender")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool?>("sent")
                         .HasColumnType("tinyint(1)");
 
                     b.HasKey("Id");

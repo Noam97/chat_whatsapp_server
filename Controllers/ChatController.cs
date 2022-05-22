@@ -46,7 +46,7 @@ public class ChatController : Controller
     [HttpPost]
     public ContentResult GetMessages([FromBody] PostContact contact) {
         string currentUserId = contact.currentUser;
-        List<Messages> msgs = q.getMessagesOf(currentUserId, contact.id);
+        List<Messages> msgs = q.getChat(currentUserId, contact.id);
         return Content(JsonSerializer.Serialize(msgs), "application/json");
     }
 
@@ -64,11 +64,19 @@ public class ChatController : Controller
         db.Messages.Add(msg);
         db.SaveChanges();
         
-        Inbox contact = q.getContactByName(newMessage.id, newMessage.inboxUID);
+        Inbox contactOne = q.getContactByName(newMessage.id, newMessage.inboxUID);
 
-        PostContact pc = new PostContact{name = contact.name, server = contact.server,};
 
-        q.updateContact(contact, pc, msg);
+        string toSendInbox = db.InboxParticipants.Where(u => u.UserId == newMessage.id).FirstOrDefault().inboxUID;
+
+        Inbox contactTwo = q.getContactByName(newMessage.currentUserId, toSendInbox);
+
+        PostContact pcOne = new PostContact{name = contactOne.name, server = contactOne.server};
+        PostContact pcTwo = new PostContact{name = contactTwo.name, server = contactTwo.server};
+
+
+        q.updateContact(contactOne, pcOne, msg);
+        q.updateContact(contactTwo, pcTwo, msg);
       
     }
 
