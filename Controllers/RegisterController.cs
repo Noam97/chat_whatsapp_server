@@ -23,7 +23,11 @@ public class RegisterController : Controller
     [HttpPost]
     public ActionResult Index(RegisterModel newUser)
     {
-        q.addNewUser(newUser);
+        if (!q.addNewUser(newUser)); {
+            ViewBag.userExists = true;
+            return View();
+
+        }
         return RedirectToAction("", "Chat", new UserIdModel{Id = newUser.UserId});
     }
 }

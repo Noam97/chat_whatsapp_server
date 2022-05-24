@@ -59,6 +59,17 @@
 
 </div>
 }
+
+<script>
+$(document).ready(function () {
+
+var isError = '@(ViewBag.userExists)';
+if (isError) {
+    document.getElementById("user_error").insertAdjacentHTML("afterend", "<h5 style='color: red'> username exists already</h5>");
+
+}
+});
+</script>
 <!--</form>-->
 </body>
 </html>
