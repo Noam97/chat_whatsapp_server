@@ -76,7 +76,7 @@ public class ChatController : Controller
             }
 
         Messages msg = new Messages{inboxUID = newMessage.inboxUID,
-        UserId = newMessage.id, messageType = newMessage.messageType, content = newMessage.content, created = DateTime.UtcNow.ToString(), sent = newMessage.sent};
+        UserId = newMessage.id, sender = newMessage.sender, messageType = newMessage.messageType, content = newMessage.content, created = DateTime.UtcNow.ToString(), sent = newMessage.sent};
         db.Messages.Add(msg);
         db.SaveChanges();
         

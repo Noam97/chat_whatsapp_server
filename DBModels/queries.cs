@@ -18,6 +18,9 @@ public class PostContact
 public class PostMessage
 {
       public string id { get; set; }
+
+    public string sender { get; set; }
+
       public string? content { get; set; }
       public string? inboxUID { get; set; }
       public string? messageType { get; set; }
@@ -124,17 +127,18 @@ class ContactQueries {
             }
         }
     }
-    public void addNewUser(RegisterModel newUser) {
+    public bool addNewUser(RegisterModel newUser) {
         using ( var db = new EFContext(conf) )
         {   
             if(db.Users.Where(u => u.Id == newUser.UserId).FirstOrDefault() != null) {
-                return;
+                return false;
             }
 
             // creates a new user. 
            User new_user = new User{Id = newUser.UserId, Password = newUser.Password, DisplayName = newUser.DisplayName, ProfileImage = newUser.ProfileImage};
             db.Users.Add(new_user);
             db.SaveChanges();
+            return true;
         }
     }
 

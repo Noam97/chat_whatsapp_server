@@ -15,12 +15,17 @@
     <link rel="stylesheet" href="~/assets/chat/chat.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.js"></script>
     <script src="~/assets/chat/users.js"></script>
     <script src="~/assets/chat/messages.js"></script>
     <script src="~/assets/chat/chat.js"></script>
     <!--    imports-->
     <script>
-    var currentUserId = '@(ViewBag.currentUser.Id)';
+        var currentUserId = '@(ViewBag.currentUser.Id)';
+
+        const connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+        connection.start();
+        console.log("SignalR Connected.");
     </script>
 </head>
 <body>
