@@ -96,6 +96,10 @@ class ContactQueries {
             if(inbox != null && db.Inboxes.Where(i => i.inboxUID == inbox.inboxUID && i.UserId == newContact.id).FirstOrDefault() != null) {
                 return;
             }
+
+            if (db.Users.Where(u => u.Id == newContact.id).FirstOrDefault() == null) {
+                addNewUser(new RegisterModel{UserId = newContact.id, DisplayName = newContact.id, Password = "", ProfileImage = ""});
+            }
             
             InboxParticipants currentUserInbox = db.InboxParticipants.Where(i => i.UserId == currentUserId).FirstOrDefault();
 
@@ -112,9 +116,14 @@ class ContactQueries {
                 db.InboxParticipants.Add(ip);
                 db.SaveChanges();
             }
+
+            if(db.InboxParticipants.Where(u=> u.UserId == newContact.id).FirstOrDefault() == null) {
+                InboxParticipants ip2 = new InboxParticipants{inboxUID = Guid.NewGuid().ToString("N"), UserId = newContact.id};
+                db.InboxParticipants.Add(ip2);
+                db.SaveChanges();
+            }
         }
     }
-
     public void addNewUser(RegisterModel newUser) {
         using ( var db = new EFContext(conf) )
         {   
@@ -200,7 +209,7 @@ class ContactQueries {
 
     public bool createNewMessage(string currentUserId, string inputUserId, string messageType, string message) {
 
- using ( var db = new EFContext(conf) ) {
+    using ( var db = new EFContext(conf) ) {
 
         InboxParticipants inboxParticipantFirst = db.InboxParticipants.Where(user => user.UserId == currentUserId).FirstOrDefault();
         

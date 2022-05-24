@@ -34,8 +34,9 @@ $(document).ready(function () {
 
     $("#createUserButton").click(async function () {
         var user = currentUserId;
-        await addNewUser($("#newUserInput").val(), user);
+        await addNewUser($("#newUserInput").val(), user, $("#serverInput").val());
         $("#newUserInput").val("");
+        $("#serverInput").val("");
 
     });
 

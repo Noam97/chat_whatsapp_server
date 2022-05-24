@@ -32,20 +32,9 @@ namespace chatWhatsappServer.Controllers.SharedApi
 
         [HttpPost]
         public async Task<IActionResult> invite([FromBody] InviteScheme invite) {
-              var values = new Dictionary<string, string>
-                {
-                    { "to", invite.to },
-                    { "from", invite.from },
-                    { "server", invite.server }
-
-                };
-
-                var content = new FormUrlEncodedContent(values);
-                string remoteServer = String.Format("http://{0}/api/invitations", invite.server);
-                var response = await client.PostAsync(remoteServer, content);
-
-                var responseString = await response.Content.ReadAsStringAsync();
-
+                PostContact pc = new PostContact{id = invite.from, name = invite.from, server = invite.server, currentUser = invite.to};
+                q.addNewContact(pc , invite.to);
+                Response.StatusCode = 201;
                 return Ok();
         }
     }

@@ -36,9 +36,25 @@ public class ChatController : Controller
 
 
     [HttpPost]
-    public IActionResult createContact([FromBody] PostContact newContact) {
+    public async Task<IActionResult> createContact([FromBody] PostContact newContact) {
         string currentUserId = newContact.currentUser;
         q.addNewContact(newContact, currentUserId);
+
+        if (newContact.server != "") {
+            var values = new Dictionary<string, string>
+            {
+                { "to", newContact.id },
+                { "from", currentUserId },
+                { "server", Request.Host.ToString() }
+
+            };
+            HttpClient client = new HttpClient();
+            var content = new FormUrlEncodedContent(values);
+            string remoteServer = String.Format("http://{0}/api/invitations", newContact.server);
+            var response = await client.PostAsync(remoteServer, content);
+            var responseString = await response.Content.ReadAsStringAsync();
+        }
+
         return Ok();
         }
 
@@ -51,7 +67,7 @@ public class ChatController : Controller
     }
 
     [HttpPost]
-    public IActionResult CreateNewMessage([FromBody] PostMessage newMessage) {
+    public async Task<IActionResult> CreateNewMessage([FromBody] PostMessage newMessage) {
 
         using ( var db = new EFContext(conf) ) {
 
@@ -66,18 +82,43 @@ public class ChatController : Controller
         
         Inbox contactOne = q.getContactByName(newMessage.id, newMessage.inboxUID);
 
+        if(contactOne.server != "") {
+            var values = new Dictionary<string, string>
+            {
+                { "to", contactOne.name },
+                { "from", newMessage.currentUserId },
+                { "content",  newMessage.content}
+
+            };
+
+            var content = new FormUrlEncodedContent(values);
+            string remoteServer = String.Format("http://{0}/api/transfer",  contactOne.server);
+            HttpClient client = new HttpClient();
+            try {
+                var response = await client.PostAsync(remoteServer, content);
+                var responseString = await response.Content.ReadAsStringAsync();
+            }
+            catch {
+                PostContact pc1 = new PostContact{name = contactOne.name, server = contactOne.server};
+                q.updateContact(contactOne, pc1, msg);
+                return Ok();
+            }
+            PostContact pc = new PostContact{name = contactOne.name, server = contactOne.server};
+            q.updateContact(contactOne, pc, msg);
+            return Ok();
+        }
+
 
         string toSendInbox = db.InboxParticipants.Where(u => u.UserId == newMessage.id).FirstOrDefault().inboxUID;
 
         Inbox contactTwo = q.getContactByName(newMessage.currentUserId, toSendInbox);
 
         PostContact pcOne = new PostContact{name = contactOne.name, server = contactOne.server};
-        PostContact pcTwo = new PostContact{name = contactTwo.name, server = contactTwo.server};
-
-
         q.updateContact(contactOne, pcOne, msg);
-        q.updateContact(contactTwo, pcTwo, msg);
-      
+        if (contactTwo != null) {
+            PostContact pcTwo = new PostContact{name = contactTwo.name, server = contactTwo.server};
+            q.updateContact(contactTwo, pcTwo, msg);
+        }
     }
 
     return Ok();

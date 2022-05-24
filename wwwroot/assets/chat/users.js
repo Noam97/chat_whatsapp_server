@@ -31,17 +31,27 @@ async function renderUsers() {
                 date = fullDate.toLocaleDateString();
                 lastMsgContent = (lastMessage.includes("blob:") ||
                     lastMessage.includes("base64")) ? "new media message" : lastMessage;
+
+                if (date !== null) {
+                    // a day has passed
+                    currentDate = (new Date() - fullDate > 86400000) ? date : hour;
+                }
             }
 
-            if (date !== null) {
-                // a day has passed
-                currentDate = (new Date() - fullDate > 86400000) ? date : hour;
+            else {
+                date = "";
+                currentDate = ""
+                lastMessage = "";
+                lastMsgContent = "";
+                fullDate = "";
+                hour = "";
+
             }
             
             users += `      <div class="row sideBar-body" onclick="renderMessages('${contact.UserId}', '${contact["image"]}', '${currentUserId}', '${contact["inboxUID"]}')">\n` +
                 '            <div class="col-sm-3 col-xs-3 sideBar-avatar">\n' +
                 '              <div class="avatar-icon">\n' +
-                `              <img src="${contact["image"]}">\n\n` +
+                `              <img src="${contact["image"].length > 0 ? contact["image"]: "/assets/chat/red-color.png"}">\n\n` +
                 '              </div>\n' +
                 '            </div>\n' +
                 '            <div class="col-sm-9 col-xs-9 sideBar-main">\n' +
@@ -61,9 +71,9 @@ async function renderUsers() {
     }
 
 
-async function addNewUser(username, currentUser) {
+async function addNewUser(username, currentUser, server) {
     $.ajax('/Chat/createContact', {
-        data : JSON.stringify({ id: username,  name: username, server: "", currentUser: currentUser}),
+        data : JSON.stringify({ id: username,  name: username, server: server, currentUser: currentUser}),
         contentType : 'application/json',
         type : 'POST',    
     }, // data to be submit

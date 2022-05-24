@@ -9,7 +9,7 @@ namespace chatWhatsappServer.Controllers.SharedApi
     public class TransferScheme {
         public string from {get; set;}
         public string to {get; set;}
-        public string server { get; set; }
+        public string content { get; set; }
 
     }
 
@@ -32,30 +32,25 @@ namespace chatWhatsappServer.Controllers.SharedApi
 
         [HttpPost]
         public async Task<IActionResult> transfer([FromBody] TransferScheme transfer) {
+        using ( var db = new EFContext(conf) ) 
+        {
+            InboxParticipants contactOne = db.InboxParticipants.Where(u=> u.UserId == transfer.to).FirstOrDefault();
 
-            Inbox contact = q.getContactByName(transfer.to, "");
+            Inbox contactOneInbox = q.getContactByName(transfer.from, contactOne.inboxUID);
 
-            if(contact == null) {
-                return BadRequest("Contact does not exists");
-            }
+            Messages msg = new Messages{inboxUID = contactOne.inboxUID,
+            UserId = transfer.from, messageType = "text", content = transfer.content, created = DateTime.UtcNow.ToString(), sent = true};
+            db.Messages.Add(msg);
+            db.SaveChanges();
 
+            PostContact pcOne = new PostContact{name = transfer.from, server = contactOneInbox.server};
 
-              var values = new Dictionary<string, string>
-                {
-                    { "to", transfer.to },
-                    { "from", transfer.from },
-                    { "server",  contact.server}
-
-                };
-
-                var content = new FormUrlEncodedContent(values);
-                string remoteServer = String.Format("http://{0}/api/transfer",  contact.server);
-                var response = await client.PostAsync(remoteServer, content);
-
-                var responseString = await response.Content.ReadAsStringAsync();
-
-                return Ok();
-        }
+            q.updateContact(contactOneInbox, pcOne, msg);
+            Response.StatusCode = 201;
+            return Ok();
+        } 
+    }
+        
     }
     
     }
