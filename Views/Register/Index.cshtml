@@ -93,7 +93,7 @@ function register () {
     var userName = document.getElementById("UserId").value;
     var password = document.getElementById("Password").value;
     var displayName = document.getElementById("DisplayName").value;
-    var confirmPassword = document.getElementById("confirmError").value;
+    var confirmPassword = document.getElementById("confirmpassword").value;
     function containsNumber(str) {
         return /[0-9]/.test(str);
     }
@@ -129,7 +129,7 @@ function register () {
     }
 
 //confirm password
-    if (document.getElementById("confirmError").value != password) {
+ if (document.getElementById("confirmpassword").value != password) {
         canRegister = false;
         if (!secondPasswordError) {
             document.getElementById("confirmError").style.display = "block"
