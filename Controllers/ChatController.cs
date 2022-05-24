@@ -26,6 +26,15 @@ public class ChatController : Controller
         return View();
     }
 
+
+    // get user
+    [HttpPost]
+    public ContentResult GetUser([FromBody] UserIdModel person) {
+        string id = person.Id;
+        User user = q.getUser(id);
+        return Content(JsonSerializer.Serialize(user), "application/json");
+    }
+
     // get contacts
     [HttpPost]
     public ContentResult GetContacts([FromBody] UserIdModel person) {

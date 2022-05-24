@@ -29,6 +29,8 @@
     <label for = "UserId"><b>Username: </b>
         <input asp-for="UserId" id = "UserId" type = "text" placeholder="Enter User Name" required> </label>
     <label class= "error" id = "user_error"> </label>
+    <p hidden class= "error" id = "userError" style='color: red'> user exists already</p>
+
     <br>
     <label for = "Password"><b>Password: </b> <input asp-for="Password" id = "Password" type = "password" placeholder="Enter password" required></label>
        <p hidden class= "error" id = "passwordLength" style='color: red'> The password must be at least 8 characters</p>
@@ -64,6 +66,9 @@
 
 
  <script>
+
+
+
 var existError = false;
 var charsError = false;
 var secondPasswordError = false
@@ -88,13 +93,28 @@ window.addEventListener("load",(event)=>{
     })
 })
 
-function register(){
+function getUserById(Id) {
+    return $.ajax('/Chat/GetUser', {
+        data : JSON.stringify({ 
+            Id: Id,
+        }),
+        contentType : 'application/json',
+        type : 'POST',    
+    }, // data to be submit
+    function(data, status, jqXHR) {// success callback
+            return data;
+     });
+    }
+
+async function register(){
     var canRegister = true;
     var userName = document.getElementById("UserId").value;
     var password = document.getElementById("Password").value;
     var displayName = document.getElementById("DisplayName").value;
     var confirmpassword = document.getElementById("confirmpassword").value;
     var profileImg =  document.getElementById("ProfileImageText").value;
+
+    const user = await getUserById(userName);
    
     function containsNumber(str) {
         return /[0-9]/.test(str);
@@ -102,6 +122,18 @@ function register(){
     function containLetters(str) {
         return (/[a-z]/.test(str) || /[A-Z]/.test(str));
     }
+
+if(user !== null) {
+    canRegister = false;
+    if(!existError) {
+        existError = true;
+        document.getElementById("userError").style.display = "block"
+    }
+    else{
+        existError = false
+        document.getElementById("userError").style.display = "none";
+    }
+}
 
 //Password less than 8 characters
     if(password != "" && password.length <8) {
@@ -176,7 +208,7 @@ if(canRegister){
             displayName: document.getElementById("DisplayName").value
         }));
     }
-    return $.ajax('/Register/Index', {
+    $.ajax('/Register/Index', {
         data : JSON.stringify({ 
             UserId: userName,
              DisplayName: displayName,
@@ -188,9 +220,10 @@ if(canRegister){
         type : 'POST',    
     }, // data to be submit
      function(data, status, jqXHR) {// success callback
-            return data;
      });
-    
+    setTimeout(async function(){    
+            window.location.href = `/Chat/Index/${userName}`;  
+        },500);
 }
 }
 </script>
