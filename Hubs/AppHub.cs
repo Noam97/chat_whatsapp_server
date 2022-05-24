@@ -4,6 +4,7 @@ namespace chatWhatsappServer.Hubs {
 
     public class LogicHub : Hub {
 
+    protected IHubContext<LogicHub> _context;
 
         private ContactQueries q;
         private IConfiguration conf;
@@ -14,10 +15,9 @@ namespace chatWhatsappServer.Hubs {
             q = new ContactQueries(conf);
 
         }
-        public async Task SendMessage(string sender, string receiver, string message) {
+        public async Task SendMessage(string sender, string receiver, string inboxId, string message) {
 
-            q.createNewMessage(sender, receiver, "text", message);
-            await Clients.Users(sender, receiver).SendAsync("ReceiveMessage", message);
+            await Clients.All.SendAsync("ReceivedMessage", sender, receiver, inboxId, message);
         }
 
 

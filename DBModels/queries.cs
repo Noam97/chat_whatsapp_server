@@ -18,6 +18,9 @@ public class PostContact
 public class PostMessage
 {
       public string id { get; set; }
+
+    public string sender { get; set; }
+
       public string? content { get; set; }
       public string? inboxUID { get; set; }
       public string? messageType { get; set; }

@@ -12,6 +12,9 @@ namespace chatWhatsappServer.DBModels
 
         public string UserId {get;set;}
 
+        public string? sender {get;set;}
+
+
         [Required(ErrorMessage="Message type cannot be empty")]
         [StringLength(50)]
         public string messageType {get;set;}    

@@ -1,8 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using chatWhatsappServer.DBModels;
-using System.Text.Json;
-using Microsoft.AspNetCore.Authorization;
-using System.Text.Json.Serialization;
+using chatWhatsappServer.Hubs;
+using Microsoft.AspNetCore.SignalR;
 using chatWhatsappServer.Utils;
 namespace chatWhatsappServer.Controllers.SharedApi 
 {
@@ -20,13 +19,16 @@ namespace chatWhatsappServer.Controllers.SharedApi
 
         private IConfiguration conf;
         private SecUtils utils;
+
+        private IHubContext<LogicHub> _hub;
         private static readonly HttpClient client = new HttpClient();
 
-        public TransferController(IConfiguration configuration)
+        public TransferController(IConfiguration configuration, IHubContext<LogicHub> hub)
         {
             conf = configuration;
             utils = new SecUtils(conf);
             q = new ContactQueries(conf);
+            _hub = hub;
 
         }
 
@@ -46,6 +48,9 @@ namespace chatWhatsappServer.Controllers.SharedApi
             PostContact pcOne = new PostContact{name = transfer.from, server = contactOneInbox.server};
 
             q.updateContact(contactOneInbox, pcOne, msg);
+
+            _hub.Clients.All.SendAsync("ReceivedMessage", transfer.from, transfer.to, contactOne.inboxUID, transfer.content);
+
             Response.StatusCode = 201;
             return Ok();
         } 

@@ -91,9 +91,9 @@ async function renderMessages(user, image, currentUser, inboxId) {
     
     for (const i in messagesFromDb) {
         const msg = messagesFromDb[i];
-        let direction = "receiver";
-        if (currentUser !== msg["UserId"]) {
-            direction = "sender";
+        let direction = "sender";
+        if (currentUser !== msg["sender"]) {
+            direction = "receiver";
         }
 
         if (msg["messageType"] === "text") {
@@ -123,6 +123,7 @@ function postMessage(username, inboxId, content, created, currentUserId) {
             messageType: "text",
             created: created.toString(),
             sent: true,
+            sender: currentUserId,
             currentUserId: currentUserId
         }),
         contentType : 'application/json',

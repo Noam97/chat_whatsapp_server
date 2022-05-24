@@ -117,7 +117,18 @@ $(document).ready(function () {
         }
     });
 
+    connection.on('ReceivedMessage', (sender, receiver, inboxId, message) => {
+        renderMessages(sender, "", currentUserId, inboxId);
+        let side_two = document.getElementById("side_two");
+        side_two.scrollTop = side_two.scrollHeight;
+    
+        let conversation = document.getElementById("conversation");
+        conversation.scrollTop = conversation.scrollHeight;
+        setTimeout(async function(){    
+            await renderUsers();    
+        },500);
 
+    });
 
 });
 // GLOBAL
