@@ -21,7 +21,7 @@ public class RegisterController : Controller
     }
  
     [HttpPost]
-    public ActionResult Index(RegisterModel newUser)
+    public ActionResult Index([FromBody]RegisterModel newUser)
     {
         if (!q.addNewUser(newUser)); {
             ViewBag.userExists = true;

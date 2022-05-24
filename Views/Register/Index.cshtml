@@ -17,7 +17,7 @@
 
 </head>
 <body>
-    <h1>
+<h1>
     WhatsApp Register
 </h1>
 
@@ -25,7 +25,6 @@
     <img src="~/assets/register/whatsappLogo.jpg" class="logo">
 </div>
 
-@using (Html.BeginForm("Index", "Register", FormMethod.Post)) {
 <div class="container">
     <label for = "UserId"><b>Username: </b>
         <input asp-for="UserId" id = "UserId" type = "text" placeholder="Enter User Name" required> </label>
@@ -52,17 +51,15 @@
 <br>
 
     <span class="commit" style="background-color:#f1f1f1">
-    <span  class="login">Already registered? <a href="#" onclick="@("window.location.href='" + @Url.Action("Index", "Home") + "'");"> Click here </a>to login</span>
+    <span  class="login">Already registered? <a href="#" onclick="@("window.location.href='" + @Url.Action("Index", "Home") + "'")"> Click here </a>to login</span>
     </span>
     <br> <br>
 <!--    <button type = "submit"> Register </button>-->
-<script>
-</script>
 
     <button onclick="register()" type = "submit"> Register </button>
 
 </div>
-}
+
 
 
 
@@ -76,31 +73,39 @@ var displayNameError = false
 var passwordLength = false
 
 window.addEventListener("load",(event)=>{
-    document.getElementById("ProfileImage").addEventListener("change",function (){
+    document.getElementById("ProfileImage").addEventListener("change",function (event){
         const reader = new FileReader();
         reader.addEventListener("load",()=>{
         localStorage.setItem("recent-image", reader.result);
         document.getElementById("ProfileImageText").value = reader.result;
         })
-        reader.readAsDataURL(this.files[0]);
+
+ if(event.target.files[0]){
+       reader.readAsDataURL(event.target.files[0]);
+    }
+
+     
     })
 })
 
-function register () {
-  
+function register(){
     var canRegister = true;
-  
     var userName = document.getElementById("UserId").value;
     var password = document.getElementById("Password").value;
     var displayName = document.getElementById("DisplayName").value;
-    var confirmPassword = document.getElementById("confirmError").value;
+<<<<<<< HEAD
+    var confirmpassword = document.getElementById("confirmpassword").value;
+    var profileImg =  document.getElementById("ProfileImageText").value;
+
+=======
+    var confirmPassword = document.getElementById("confirmpassword").value;
+>>>>>>> 11a17bff074462f03544a4c2fa8c3e609f607042
     function containsNumber(str) {
         return /[0-9]/.test(str);
     }
     function containLetters(str) {
         return (/[a-z]/.test(str) || /[A-Z]/.test(str));
     }
-
 
 //Password less than 8 characters
     if(password != "" && password.length <8) {
@@ -114,7 +119,6 @@ function register () {
         passwordLength = false
         document.getElementById("passwordLength").style.display = "none"
     }
-
 // password contain_chars_numbers
     if (!(containLetters(password) && containsNumber(password)) && password != "") {
         canRegister = false;
@@ -128,8 +132,9 @@ function register () {
         document.getElementById("charsError").style.display = "none";
     }
 
+
 //confirm password
-    if (document.getElementById("confirmError").value != password) {
+ if (document.getElementById("confirmpassword").value != password) {
         canRegister = false;
         if (!secondPasswordError) {
             document.getElementById("confirmError").style.display = "block"
@@ -154,36 +159,45 @@ function register () {
         document.getElementById("displayNameError").style.display = "none";
     }
 
+
+
+
 //add the user
-    if (canRegister) {
-        //if the user didnt add photo - default photo
-        if( document.getElementById("img").files.length == 0 ) {
-            localStorage.setItem("new_user", JSON.stringify({
-                password: password,
-                profile: "https://www.enduresc.com.au/wordpress/wp-content/uploads/2018/05/user-profile.jpg",
-                chats: [],
-                displayName: document.getElementById("name").value
-            }));
-        }
-        else{
-            localStorage.setItem("new_user", JSON.stringify({
-                password: password,
-                profile: localStorage.getItem("recent-image"),
-                chats: [],
-                displayName: document.getElementById("name").value
-            }));
-        }
-        window.location.replace(`chat.html?${userName}`);
-        };
-}  
+if(canRegister){
+  if( document.getElementById("ProfileImageText").length == 0 ) {
+        localStorage.setItem("new_user", JSON.stringify({
+            password: password,
+            profile: "https://www.enduresc.com.au/wordpress/wp-content/uploads/2018/05/user-profile.jpg",
+            chats: [],
+            displayName: document.getElementById("DisplayName").value
+        }));
+    }
+    else{        
+        localStorage.setItem("new_user", JSON.stringify({
+            password: password,
+            profile: localStorage.getItem("recent-image"),
+            chats: [],
+            displayName: document.getElementById("DisplayName").value
+        }));
+    }
+    return $.ajax('/Register/Index', {
+        data : JSON.stringify({ 
+            UserId: userName,
+             DisplayName: displayName,
+           Password:password,
+          
+           ProfileImage: profileImg
+        }),
+        contentType : 'application/json',
+        type : 'POST',    
+    }, // data to be submit
+     function(data, status, jqXHR) {// success callback
+            return data;
+     });
+    
+}
+}
 </script>
-<!--<form method="post">-->
 
-
-
-
-
-
-<!--</form>-->
 </body>
 </html>
