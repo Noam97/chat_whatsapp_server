@@ -17,9 +17,9 @@ public class PostContact
 
 public class PostMessage
 {
-      public string id { get; set; }
+      public string? id { get; set; }
 
-    public string sender { get; set; }
+    public string? sender { get; set; }
 
       public string? content { get; set; }
       public string? inboxUID { get; set; }
@@ -226,11 +226,12 @@ class ContactQueries {
         string inboxUIDSecond = inboxParticipantSecond.inboxUID;
 
         Inbox firstContact = getContactByName(inputUserId, inboxUIDFirst);
-        Inbox secondContact = getContactByName(inputUserId, inboxUIDSecond);
+        Inbox secondContact = getContactByName(currentUserId, inboxUIDSecond);
 
-        Messages msg = new Messages{inboxUID = firstContact.inboxUID, UserId = inputUserId, messageType = messageType, content = message, created = DateTime.UtcNow.ToString(), sent = false};
+        Messages msg = new Messages{inboxUID = firstContact.inboxUID, UserId = inputUserId,sender = currentUserId, messageType = messageType, content = message, created = DateTime.UtcNow.ToString(), sent = false};
         db.Messages.Add(msg);
         db.SaveChanges();
+        
 
 
         PostContact pc1 = new PostContact{id = firstContact.UserId, name = firstContact.name, server = firstContact.server};
